@@ -40,7 +40,6 @@ func CreateMovie(w http.ResponseWriter, r *http.Request) {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	movie.Id = primitive.NewObjectID()
 	result, err := collection.InsertOne(ctx, &movie)
 	if err != nil {
 		sendErrorResponse(&w, err, http.StatusInternalServerError)
@@ -102,7 +101,7 @@ func DeleteMovie(w http.ResponseWriter, r *http.Request) {
 
 func UpdateMovie(w http.ResponseWriter, r *http.Request) {
 	var movie models.Movie
-	ctx, close := context.WithTimeout(context.Background(), 10*time.Minute)
+	ctx, close := context.WithTimeout(context.Background(), 10*time.Second)
 	defer close()
 	params := mux.Vars(r)
 	objectid, _ := primitive.ObjectIDFromHex(params["id"])
