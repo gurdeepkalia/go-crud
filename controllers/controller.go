@@ -19,7 +19,7 @@ import (
 //Operations
 //1. Create a movie - DOne
 //2. Read using id - Done
-//3. Update watched using id
+//3. Update watched using id - DONE
 //4. Delete a movie - DONE
 //5. List all movies - Done
 
@@ -43,14 +43,10 @@ func CreateMovie(w http.ResponseWriter, r *http.Request) {
 	movie.Id = primitive.NewObjectID()
 	result, err := collection.InsertOne(ctx, &movie)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		response := responses.MovieResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}}
-		json.NewEncoder(w).Encode(response)
+		sendErrorResponse(&w, err, http.StatusInternalServerError)
 		return
 	}
-	w.WriteHeader(http.StatusCreated)
-	response := responses.MovieResponse{Status: http.StatusCreated, Message: "success", Data: map[string]interface{}{"data": result}}
-	json.NewEncoder(w).Encode(response)
+	sendSuccessResponse(&w, result)
 }
 
 func GetMovie(w http.ResponseWriter, r *http.Request) {
@@ -65,9 +61,7 @@ func GetMovie(w http.ResponseWriter, r *http.Request) {
 		sendErrorResponse(&w, err, http.StatusInternalServerError)
 		return
 	}
-	w.WriteHeader(http.StatusOK)
-	response := responses.MovieResponse{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"data": movie}}
-	json.NewEncoder(w).Encode(response)
+	sendSuccessResponse(&w, movie)
 }
 
 func GetAllMovies(w http.ResponseWriter, r *http.Request) {
@@ -88,9 +82,7 @@ func GetAllMovies(w http.ResponseWriter, r *http.Request) {
 		}
 		movies = append(movies, current)
 	}
-	w.WriteHeader(http.StatusOK)
-	response := responses.MovieResponse{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"data": movies}}
-	json.NewEncoder(w).Encode(response)
+	sendSuccessResponse(&w, movies)
 }
 
 func DeleteMovie(w http.ResponseWriter, r *http.Request) {
@@ -105,9 +97,7 @@ func DeleteMovie(w http.ResponseWriter, r *http.Request) {
 		sendErrorResponse(&w, err, http.StatusInternalServerError)
 		return
 	}
-	w.WriteHeader(http.StatusOK)
-	response := responses.MovieResponse{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"data": result}}
-	json.NewEncoder(w).Encode(response)
+	sendSuccessResponse(&w, result)
 }
 
 func UpdateMovie(w http.ResponseWriter, r *http.Request) {
@@ -139,13 +129,17 @@ func UpdateMovie(w http.ResponseWriter, r *http.Request) {
 		sendErrorResponse(&w, err, http.StatusInternalServerError)
 		return
 	}
-	w.WriteHeader(http.StatusOK)
-	response := responses.MovieResponse{Status: http.StatusOK, Message: "success", Data: map[string]interface{}{"data": updatedMovie}}
-	json.NewEncoder(w).Encode(response)
+	sendSuccessResponse(&w, update)
 }
 
 func sendErrorResponse(w *http.ResponseWriter, err error, statusCode int) {
 	(*w).WriteHeader(statusCode)
 	response := responses.MovieResponse{Status: statusCode, Message: "error", Data: map[string]interface{}{"data": err.Error()}}
+	json.NewEncoder(*w).Encode(response)
+}
+
+func sendSuccessResponse(w *http.ResponseWriter, data interface{}) {
+	(*w).WriteHeader(http.StatusCreated)
+	response := responses.MovieResponse{Status: http.StatusCreated, Message: "success", Data: map[string]interface{}{"data": data}}
 	json.NewEncoder(*w).Encode(response)
 }
