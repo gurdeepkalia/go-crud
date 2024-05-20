@@ -24,7 +24,7 @@ Prerequisites :
 Testing over kubernetes using docker desktop
 ---------------------------------------------
 Prerequisite:
-1. Setup docker desktop on local system. Need to install kubectl as well if running on linux.
+1. Setup docker desktop on local system. Need to install kubectl as well if running on linux. Start the Kubernetes container from docker desktop ui.
 Docker Desktop includes a standalone Kubernetes server and client, as well as Docker CLI integration that runs on your machine.
 The Kubernetes server runs locally within your Docker instance, is not configurable, and is a single-node cluster. It runs within a Docker container on your local system, and is only for local testing.
 2. Image is already published over dockerhub using github workflow.
