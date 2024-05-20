@@ -34,6 +34,7 @@ Steps to depoy and test:
 2. Navigate to the project directory and deploy your application to Kubernetes using `kubectl apply -f go-crud-kubernetes.yaml`
 3. Check if deployed successfully using `kubectl get deployments` and `kubectl get services`
 4. Run `curl localhost:30001/api/movies`
+5. Run the `kubectl delete -f go-crud-kubernetes.yaml` command to tear down your application.
 
 
 References : 
